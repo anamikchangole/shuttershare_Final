@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShutterShare - Login First to Rent or List Gear</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ===== HOW IT WORKS MODAL ===== */
+        .how-it-works-content {
+            max-width: 550px !important;
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 10px 0 15px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 12px;
+            border: var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 180, 70, 0.1);
+            border: 1.5px solid var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--secondary);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .step-content h3 {
+            font-size: 15px;
+            margin-bottom: 3px;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 0;
+        }
+
+        .step-content strong {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .step-icon {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            font-size: 30px;
+            color: var(--secondary);
+            opacity: 0.1;
+            transition: all 0.3s ease;
+        }
+
+        .trust-badges {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+            padding: 10px 0;
+            border-top: var(--border-light);
+            border-bottom: var(--border-light);
+        }
+
+        .trust-badge {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .trust-badge i {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 0;
+            display: inline-block;
+        }
+
+        .trust-badge span {
+            display: block;
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .cta-buttons .btn {
+            min-width: 160px;
+            padding: 12px 24px;
+            font-size: 14px;
+            text-align: center;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        @keyframes slideInStep {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .step-item {
+            animation: slideInStep 0.4s ease-out forwards;
+            opacity: 0;
+        }
+
+        .step-item:nth-child(1) { animation-delay: 0.1s; }
+        .step-item:nth-child(2) { animation-delay: 0.15s; }
+        .step-item:nth-child(3) { animation-delay: 0.2s; }
+        .step-item:nth-child(4) { animation-delay: 0.25s; }
+
+        /* ========= PROFESSIONAL DARK THEME ======= */
+        :root {
+            --primary: #0A0A0A;
+            --secondary: #FFB347;
+            --accent: #3B82F6;
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
+            --background: #0F0F0F;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-hover: rgba(255, 255, 255, 0.08);
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #FFB347 0%, #FF7E5F 100%);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+            --border-light: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== PROFESSIONAL PRELOADER ANIMATION ===== */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1a1a1a 100%);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-content {
+            text-align: center;
+            animation: fadeInUp 1s ease;
+        }
+
+        .camera-icon {
+            font-size: 80px;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            animation: cameraShake 2s infinite, glowPulse 2s infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 180, 70, 0.5));
+        }
+
+        @keyframes cameraShake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-5deg) scale(1.1); }
+            75% { transform: rotate(5deg) scale(1.1); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 180, 70, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 180, 70, 0.8)); }
+        }
+
+        .preloader-text {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+        }
+
+        .preloader-text span {
+            display: inline-block;
+            color: var(--text-primary);
+            animation: letterPop 1.5s infinite;
+            animation-delay: calc(0.1s * var(--i));
+        }
+
+        .preloader-text span:nth-child(1) { --i: 1; }
+        .preloader-text span:nth-child(2) { --i: 2; }
+        .preloader-text span:nth-child(3) { --i: 3; }
+        .preloader-text span:nth-child(4) { --i: 4; }
+        .preloader-text span:nth-child(5) { --i: 5; }
+        .preloader-text span:nth-child(6) { --i: 6; }
+        .preloader-text span:nth-child(7) { --i: 7; }
+        .preloader-text span:nth-child(8) { --i: 8; }
+        .preloader-text span:nth-child(9) { --i: 9; }
+        .preloader-text span:nth-child(10) { --i: 10; }
+        .preloader-text span:nth-child(11) { --i: 11; }
+        .preloader-text span:nth-child(12) { --i: 12; }
+
+        @keyframes letterPop {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                color: var(--text-primary);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.2);
+                color: var(--secondary);
+            }
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), #ff7e5f);
+            border-radius: 4px;
+            animation: progressLoad 2s ease-in-out forwards;
+            box-shadow: 0 0 20px var(--secondary);
+        }
+
+        @keyframes progressLoad {
+            0% { width: 0%; }
+            20% { width: 20%; }
+            40% { width: 40%; }
+            60% { width: 60%; }
+            80% { width: 80%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Shutter effect */
+        .preloader::before,
+        .preloader::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: var(--primary);
+            z-index: -1;
+            transition: transform 1s ease;
+        }
+
+        .preloader::before {
+            left: 0;
+            transform: translateX(0);
+        }
+
+        .preloader::after {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .preloader.hidden::before {
+            transform: translateX(-100%);
+        }
+
+        .preloader.hidden::after {
+            transform: translateX(100%);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 5%;
+            background: rgba(10, 10, 10, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: #ffa01e;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 16px;
+        }
+
+        /* ===== HERO SECTION - WITH 130px FIX ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            padding-top: 130px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 100%);
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .gradient-text {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        /* ===== ACTION CARDS ===== */
+        .action-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            border: var(--border-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary);
+            background: var(--card-hover);
+        }
+
+        .action-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+        }
+
+        .action-card.owner .action-icon {
+            background: rgba(255, 180, 70, 0.2);
+            color: var(--secondary);
+        }
+
+        .action-card.renter .action-icon {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+        }
+
+        .action-card h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .action-card p {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+        }
+
+        .login-prompt {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 20px;
+        }
+
+        .login-prompt i {
+            color: var(--secondary);
+        }
+
+        /* ===== FEATURED ITEMS PREVIEW ===== */
+        .featured-preview {
+            padding: 80px 5%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.5) 100%);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .item-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: var(--border-light);
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .item-card:hover {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+
+        .item-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .item-card:hover .item-overlay {
+            opacity: 1;
+        }
+
+        .item-overlay span {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .item-content {
+            padding: 15px;
+        }
+
+        .item-content h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .item-content p {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        /* ===== LOGIN MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--primary);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            border: var(--border-light);
+            animation: modalSlide 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-body {
+            padding: 20px 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: var(--border-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .modal-header h2 {
+            font-size: 22px;
+            text-align: center;
+            margin: 0;
+            flex: 1;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 22px;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: color 0.3s;
+            z-index: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--secondary);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: var(--border-light);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .tab-btn.active {
+            background: var(--secondary);
+            color: var(--primary);
+            border-color: var(--secondary);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            background: var(--card-bg);
+            border: var(--border-light);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 15px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        .forgot-link a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: var(--border-light);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .modal-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            background: var(--background);
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-nav {
+            background: var(--primary);
+            padding: 15px 5%;
+            border-bottom: var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .dashboard-content {
+            padding: 40px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--secondary), #ffa01e);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            color: var(--primary);
+        }
+
+        .welcome-card h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .quick-action {
+            background: var(--card-bg);
+            border: var(--border-light);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-action:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .quick-action i {
+            font-size: 32px;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .quick-action h3 {
+            margin-bottom: 10px;
+        }
+
+        .quick-action p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin: 40px 0 20px;
+        }
+
+        .my-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .my-item-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: var(--border-light);
+        }
+
+        .my-item-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .my-item-content {
+            padding: 20px;
+        }
+
+        .my-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .item-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-rented {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--secondary);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .item-actions button {
+            flex: 1;
+            padding: 8px;
+            background: transparent;
+            border: var(--border-light);
+            color: var(--text-primary);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .item-actions button:hover {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        .add-item-form {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            border: var(--border-light);
+            margin-top: 40px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--primary);
+            padding: 40px 5% 20px;
+            border-top: var(--border-light);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero {
+                padding-top: 80px;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .action-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .trust-badges {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .step-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .step-icon {
+                position: relative;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cta-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .cta-buttons .btn {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+        /* Utility classes for removing inline styles */
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+        }
+
+        .unlist-btn {
+            color: #ef4444;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .margin-bottom-20 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Professional Preloader Animation -->
+    <div class="preloader">
+        <div class="preloader-content">
+            <div class="camera-icon">
+                <i class="fas fa-camera"></i>
+            </div>
+            <div class="preloader-text">
+                <span>S</span>
+                <span>h</span>
+                <span>u</span>
+                <span>t</span>
+                <span>t</span>
+                <span>e</span>
+                <span>r</span>
+                <span>S</span>
+                <span>h</span>
+                <span>a</span>
+                <span>r</span>
+                <span>e</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            Shutter<span>Share</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" onclick="openModal()">Browse Gear</a>
+            <a href="#" onclick="openHowItWorks()">How It Works</a>
+            <button class="btn btn-outline" onclick="openModal('login')">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <button class="btn btn-primary" onclick="openModal('register')">
+                Sign Up <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Share Your Gear,<br>
+                <span class="gradient-text">Earn Money</span>
+            </h1>
+            <p class="hero-description">
+                Join ShutterShare today to list your camera equipment or rent from fellow creators.
+            </p>
+            
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="openModal('register')">
+                    Get Started <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn btn-outline btn-large" onclick="openHowItWorks()">
+                    Learn More
+                </button>
+            </div>
+
+            <!-- Action Cards -->
+            <div class="action-cards">
+                <div class="action-card owner" onclick="openModal('register')">
+                    <div class="action-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>List Your Gear</h3>
+                    <p>Have cameras, lenses, or lighting? List them for rent and start earning.</p>
+                    <div class="login-prompt">
+                        <i class="fas fa-lock"></i> Login required to list items
+                    </div>
+                </div>
+                
+                <div class="action-card renter" onclick="openModal('register')">
+                    <div class="action-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3>Rent Equipment</h3>
+                    <p>Find professional gear near you for your next project.</p>
+                    <div class="login-prompt">
+                        <i class="fas fa-lock"></i> Login required to rent
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Items Preview -->
+    <section class="featured-preview">
+        <div class="section-header">
+            <h2>Popular Gear Near You</h2>
+            <p>Login to see full details and availability</p>
+        </div>
+        
+        <div class="items-grid">
+            <!-- Item 1 -->
+            <div class="item-card" onclick="openModal()">
+                <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+                    <div class="item-overlay">
+                        <span>Login to View</span>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <h4>Sony FX6 Cinema Camera</h4>
+                    <p>Login for price</p>
+                </div>
+            </div>
+            
+            <!-- Item 2 -->
+            <div class="item-card" onclick="openModal()">
+                <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1581591524425-c7e0978865fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+                    <div class="item-overlay">
+                        <span>Login to View</span>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <h4>Canon EOS R5</h4>
+                    <p>Login for price</p>
+                </div>
+            </div>
+            
+            <!-- Item 3 -->
+            <div class="item-card" onclick="openModal()">
+                <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1542567455-cd733f23faa1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+                    <div class="item-overlay">
+                        <span>Login to View</span>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <h4>Aputure 300D Kit</h4>
+                    <p>Login for price</p>
+                </div>
+            </div>
+            
+            <!-- Item 4 -->
+            <div class="item-card" onclick="openModal()">
+                <div class="item-image" style="background-image: url('https://images.unsplash.com/photo-1588591795084-177c5b9b1a7f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+                    <div class="item-overlay">
+                        <span>Login to View</span>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <h4>Canon 24-70mm f/2.8L</h4>
+                    <p>Login for price</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login/Register Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome to ShutterShare</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Tab Buttons -->
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                    <button class="tab-btn" onclick="switchTab('register')">Register</button>
+                </div>
+                
+                <!-- Login Form -->
+                <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="john@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                    
+                    <div class="forgot-link">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Login
+                    </button>
+                </form>
+                
+                <!-- Register Form -->
+                <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="John Doe" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="john@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" placeholder="(123) 456-7890" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" placeholder="Create password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" placeholder="Confirm password" required>
+                    </div>
+                    
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to the Terms of Service</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p>By joining, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Modal -->
+    <div class="modal" id="howItWorksModal">
+        <div class="modal-content how-it-works-content">
+            <div class="modal-header">
+                <h2>How ShutterShare Works</h2>
+                <button class="modal-close" onclick="closeHowItWorksModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="steps-container">
+                    <!-- Step 1 -->
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Create Your Account</h3>
+                            <p>Sign up as a gear owner or renter in just 2 minutes. Verify your identity to start.</p>
+                            <div class="step-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>List or Browse Gear</h3>
+                            <p><strong>For Owners:</strong> List your cameras, lenses, and lighting with photos and prices.<br>
+                            <strong>For Renters:</strong> Browse thousands of professional gear near you.</p>
+                            <div class="step-icon">
+                                <i class="fas fa-camera-retro"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Book & Secure</h3>
+                            <p>Choose your dates, pay securely online. Your payment is held safely until you receive the gear.</p>
+                            <div class="step-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Pick Up & Create</h3>
+                            <p>Meet the owner or get gear delivered. Start creating! Insurance included on every rental.</p>
+                            <div class="step-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Insured</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Secure Payments</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Verified Reviews</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-headset"></i>
+                        <span>24/7 Support</span>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="openModal('register')">Get Started Now</button>
+                    <button class="btn btn-outline" onclick="closeHowItWorksModal()">Explore Gear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="dashboard-nav">
+            <div class="logo">Shutter<span>Share</span></div>
+            <div class="user-info">
+                <span class="user-name" id="userName">John Doe</span>
+                <div class="user-avatar">JD</div>
+                <button class="btn btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <!-- Welcome Card -->
+            <div class="welcome-card">
+                <h1>Welcome back, <span id="welcomeName">John</span>! 👋</h1>
+                <p>What would you like to do today?</p>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="quick-action" onclick="showAddItemForm()">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Add New Item</h3>
+                    <p>List your camera, lens, or lighting gear for rent</p>
+                </div>
+                
+                <div class="quick-action" onclick="showMyItems()">
+                    <i class="fas fa-camera"></i>
+                    <h3>My Listings</h3>
+                    <p>View and manage your listed items</p>
+                </div>
+                
+                <div class="quick-action" onclick="showRentals()">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>Current Rentals</h3>
+                    <p>See who's renting your gear</p>
+                </div>
+                
+                <div class="quick-action" onclick="showEarnings()">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>Earnings</h3>
+                    <p>$450 earned this month</p>
+                </div>
+            </div>
+            
+            <!-- My Items Section -->
+            <h2 class="section-title">My Listed Items</h2>
+            <div class="my-items-grid" id="myItems">
+                <!-- Item 1 -->
+                <div class="my-item-card">
+                    <div class="my-item-image" style="background-image: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')"></div>
+                    <div class="my-item-content">
+                        <div class="my-item-header">
+                            <h4>Sony FX6 Cinema Camera</h4>
+                            <span class="item-status status-available">Available</span>
+                        </div>
+                        <p><strong>$150/day</strong> • $500 deposit</p>
+                        <div class="item-actions">
+                            <button>Edit</button>
+                            <button>View Bookings</button>
+                            <button style="color: #ef4444;">Unlist</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Item 2 -->
+                <div class="my-item-card">
+                    <div class="my-item-image" style="background-image: url('https://images.unsplash.com/photo-1581591524425-c7e0978865fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')"></div>
+                    <div class="my-item-content">
+                        <div class="my-item-header">
+                            <h4>Canon EOS R5</h4>
+                            <span class="item-status status-rented">Rented</span>
+                        </div>
+                        <p><strong>$120/day</strong> • Returns Mar 20</p>
+                        <div class="item-actions">
+                            <button>Edit</button>
+                            <button>View Bookings</button>
+                            <button style="color: #ef4444;">Unlist</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Item Form -->
+            <div class="add-item-form hidden" id="addItemForm">
+                <h3 class="margin-bottom-20">List New Equipment</h3>
+                
+                <form onsubmit="addNewItem(event)">
+                    <div class="form-group">
+                        <label>Equipment Title</label>
+                        <input type="text" placeholder="e.g., Sony FX6 Cinema Camera" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select required>
+                                <option>Camera</option>
+                                <option>Lens</option>
+                                <option>Lighting</option>
+                                <option>Audio</option>
+                                <option>Accessories</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <input type="text" placeholder="e.g., Sony, Canon" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Daily Rate ($)</label>
+                            <input type="number" placeholder="150" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Security Deposit ($)</label>
+                            <input type="number" placeholder="500" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea rows="4" placeholder="Describe your equipment, condition, included accessories..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Photos</label>
+                        <input type="file" multiple accept="image/*">
+                    </div>
+                    
+                    <div class="form-row">
+                        <button type="submit" class="btn btn-primary">List Item</button>
+                        <button type="button" class="btn btn-outline" onclick="hideAddItemForm()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 ShutterShare. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Professional Preloader
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const preloader = document.querySelector('.preloader');
+                preloader.classList.add('hidden');
+                
+                setTimeout(function() {
+                    preloader.style.display = 'none';
+                }, 1000);
+            }, 2000);
+        });
+
+        // Modal Functions
+        function openModal(tab = 'login') {
+            const modal = document.getElementById('authModal');
+            modal.classList.add('active');
+            switchTab(tab);
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        // How It Works Modal Functions
+        function openHowItWorks() {
+            document.getElementById('howItWorksModal').classList.add('active');
+        }
+
+        function closeHowItWorksModal() {
+            document.getElementById('howItWorksModal').classList.remove('active');
+        }
+
+        // Tab Switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === tab) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.remove('active');
+            
+            if (tab === 'login') {
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+        
+        // Handle Login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = event.target.querySelector('input[type="email"]').value;
+            const name = email.split('@')[0];
+            
+            localStorage.setItem('user', JSON.stringify({
+                name: name,
+                email: email,
+                loggedIn: true
+            }));
+            
+            closeModal();
+            showDashboard(name);
+        }
+        
+        // Handle Register
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = event.target.querySelector('input[type="text"]').value;
+            const email = event.target.querySelector('input[type="email"]').value;
+            
+            localStorage.setItem('user', JSON.stringify({
+                name: name,
+                email: email,
+                loggedIn: true
+            }));
+            
+            closeModal();
+            showDashboard(name);
+        }
+        
+        // Show Dashboard
+        function showDashboard(name) {
+            document.getElementById('dashboard').classList.add('active');
+            document.getElementById('userName').textContent = name;
+            document.getElementById('welcomeName').textContent = name.split(' ')[0];
+            
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.querySelector('.user-avatar').textContent = initials;
+        }
+        
+        // Check if user is already logged in
+        window.onload = function() {
+            const user = localStorage.getItem('user');
+            if (user) {
+                const userData = JSON.parse(user);
+                showDashboard(userData.name);
+            }
+        };
+        
+        // Logout
+        function logout() {
+            localStorage.removeItem('user');
+            document.getElementById('dashboard').classList.remove('active');
+        }
+        
+        // Dashboard Functions
+        function showAddItemForm() {
+            document.getElementById('addItemForm').style.display = 'block';
+            document.getElementById('addItemForm').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function hideAddItemForm() {
+            document.getElementById('addItemForm').style.display = 'none';
+        }
+        
+        function addNewItem(event) {
+            event.preventDefault();
+            alert('Your item has been listed! (Demo)');
+            hideAddItemForm();
+        }
+        
+        function showMyItems() {
+            document.getElementById('myItems').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showRentals() {
+            alert('Viewing your current rentals (Demo)');
+        }
+        
+        function showEarnings() {
+            alert('Your earnings: $450 this month (Demo)');
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+            
+            const howItWorksModal = document.getElementById('howItWorksModal');
+            if (event.target == howItWorksModal) {
+                closeHowItWorksModal();
+            }
+        };
+    </script>
+</body>
+</html>
