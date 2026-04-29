@@ -17,12 +17,11 @@ const razorpay = new Razorpay({
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://admin:Shutter2026@admin.fzybtfh.mongodb.net/shuttershare';
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+const MONGODB_URI = 'mongodb+srv://admin:Shutter2026@admin.fzybtfh.mongodb.net/shuttershare';
+
 // MongoDB Connection
-
-
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('✅ MongoDB Connected successfully'))
     .catch(err => console.error('❌ MongoDB Connection error:', err));
@@ -89,8 +88,19 @@ const bookingSchema = new mongoose.Schema({
     securityDeposit: { type: Number },
     platformFee: { type: Number },
     totalAmount: { type: Number },
-    status: { type: String, enum: ['pending', 'confirmed', 'active', 'completed', 'cancelled'], default: 'pending' },
+    status: { type: String, enum: ['pending', 'confirmed', 'ready', 'active', 'completed', 'cancelled'], default: 'pending' },
     cancelledBy: { type: String, enum: ['renter', 'owner'] },
+    createdAt: { type: Date, default: Date.now }
+});
+
+// Payment Schema
+const paymentSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    razorpay_order_id: { type: String, required: true },
+    razorpay_payment_id: { type: String, required: true },
+    amount: { type: Number, required: true },
+    currency: { type: String, default: 'INR' },
+    status: { type: String, enum: ['success', 'failed'], default: 'success' },
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -98,6 +108,7 @@ const bookingSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 const Product = mongoose.model('Product', productSchema);
 const Booking = mongoose.model('Booking', bookingSchema);
+const Payment = mongoose.model('Payment', paymentSchema);
 
 // Helper function to generate booking ID
 function generateBookingId() {
@@ -222,6 +233,36 @@ app.get('/api/auth/profile', async (req, res) => {
         res.json({ success: true, user });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
+// Get user analytics
+app.get('/api/auth/analytics', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ error: 'Auth required' });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
+
+        let earned = 0;
+        let spent = 0;
+        let count = 0;
+
+        // Calculate earnings & total bookings as Owner
+        const ownerBookings = await Booking.find({ ownerId: decoded.id, status: { $ne: 'cancelled' } });
+        ownerBookings.forEach(b => {
+            earned += b.totalAmount || 0;
+            count++;
+        });
+
+        // Calculate spending as Renter
+        const renterBookings = await Booking.find({ renterId: decoded.id, status: { $ne: 'cancelled' } });
+        renterBookings.forEach(b => {
+            spent += b.totalAmount || 0;
+        });
+
+        res.json({ success: true, earned, spent, count });
+    } catch (error) {
+        console.error('Analytics Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // Update user profile
 app.put('/api/auth/profile', async (req, res) => {
@@ -229,10 +270,10 @@ app.put('/api/auth/profile', async (req, res) => {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) return res.status(401).json({ error: 'Auth required' });
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
-        
+
         const { name, phone, role, bio, location, avatar, coverImage } = req.body;
         const user = await User.findById(decoded.id);
-        
+
         if (name) user.name = name;
         if (phone) user.phone = phone;
         if (role) user.role = role;
@@ -240,21 +281,21 @@ app.put('/api/auth/profile', async (req, res) => {
         if (location) user.location = location;
         if (avatar) user.avatar = avatar;
         if (coverImage) user.coverImage = coverImage;
-        
+
         await user.save();
-        res.json({ 
-            success: true, 
-            user: { 
-                id: user._id, 
-                name: user.name, 
-                email: user.email, 
-                role: user.role, 
+        res.json({
+            success: true,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
                 phone: user.phone,
                 bio: user.bio,
                 location: user.location,
                 avatar: user.avatar,
                 coverImage: user.coverImage
-            } 
+            }
         });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -265,13 +306,38 @@ app.get('/api/admin/users/pending', async (req, res) => {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) return res.status(401).json({ error: 'Auth required' });
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
-        
+
         const admin = await User.findById(decoded.id);
         if (admin.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
-        
-        const users = await User.find({ isVerified: false, aadhaarImage: { $exists: true } }).select('-password');
+
+        // Exclude massive base64 image from the list response to drastically improve performance
+        const users = await User.find({ isVerified: false, aadhaarImage: { $exists: true, $ne: null } }).select('-password -aadhaarImage');
         res.json({ success: true, users });
     } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+// Admin: Get Aadhaar Image
+app.get('/api/admin/users/:userId/aadhaar', async (req, res) => {
+    try {
+        const token = req.query.token;
+        if (!token) return res.status(401).send('Auth required');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
+
+        const admin = await User.findById(decoded.id);
+        if (admin.role !== 'admin') return res.status(403).send('Admin access required');
+
+        const user = await User.findById(req.params.userId).select('aadhaarImage');
+        if (!user || !user.aadhaarImage) return res.status(404).send('Not found');
+
+        const matches = user.aadhaarImage.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        if (!matches || matches.length !== 3) {
+            return res.status(400).send('Invalid image format');
+        }
+
+        const buffer = Buffer.from(matches[2], 'base64');
+        res.set('Content-Type', matches[1]);
+        res.send(buffer);
+    } catch (error) { res.status(500).send(error.message); }
 });
 
 // Admin: Verify user
@@ -280,16 +346,35 @@ app.post('/api/admin/users/verify/:userId', async (req, res) => {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) return res.status(401).json({ error: 'Auth required' });
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
-        
+
         const admin = await User.findById(decoded.id);
         if (admin.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
-        
+
         const user = await User.findById(req.params.userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
-        
+
         user.isVerified = true;
         await user.save();
         res.json({ success: true, message: 'User verified successfully' });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+// Admin: Reject user
+app.delete('/api/admin/users/reject/:userId', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ error: 'Auth required' });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
+
+        const admin = await User.findById(decoded.id);
+        if (admin.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
+
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (user.isVerified) return res.status(400).json({ error: 'Cannot reject an already verified user' });
+
+        await User.findByIdAndDelete(req.params.userId);
+        res.json({ success: true, message: 'User rejected and removed successfully' });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -368,6 +453,11 @@ app.post('/api/products', async (req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
+
+        const user = await User.findById(decoded.id);
+        if (!user || !user.isVerified) {
+            return res.status(403).json({ error: 'Your account must be verified by an admin before you can list equipment.' });
+        }
 
         const product = new Product({
             ...req.body,
@@ -449,7 +539,7 @@ app.post('/api/bookings', async (req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
-        
+
         // Check verification
         const user = await User.findById(decoded.id);
         if (!user.isVerified) {
@@ -544,7 +634,7 @@ app.put('/api/bookings/:id/status', async (req, res) => {
         const { status, cancelledBy } = req.body;
         const updateData = { status };
         if (cancelledBy) updateData.cancelledBy = cancelledBy;
-        
+
         const booking = await Booking.findByIdAndUpdate(req.params.id, updateData, { new: true });
         res.json({ success: true, booking });
     } catch (error) {
@@ -575,7 +665,13 @@ app.post('/api/payments/create-order', async (req, res) => {
 // Verify Payment
 app.post('/api/payments/verify', async (req, res) => {
     try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount } = req.body;
+
+        // Ensure authentication token exists
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ error: 'Auth required for payment verification' });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
+
         const body = razorpay_order_id + "|" + razorpay_payment_id;
 
         const expectedSignature = crypto
@@ -584,11 +680,47 @@ app.post('/api/payments/verify', async (req, res) => {
             .digest('hex');
 
         if (expectedSignature === razorpay_signature) {
-            res.json({ success: true, message: "Payment verified successfully" });
+            // Save the payment record
+            const payment = new Payment({
+                userId: decoded.id,
+                razorpay_order_id,
+                razorpay_payment_id,
+                amount: amount || 0,
+                status: 'success'
+            });
+            await payment.save();
+
+            res.json({ success: true, message: "Payment verified successfully", paymentId: payment._id });
         } else {
             res.status(400).json({ success: false, message: "Invalid signature" });
         }
     } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Record Failed Payment
+app.post('/api/payments/fail', async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, amount, reason } = req.body;
+
+        // Ensure authentication token exists
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ error: 'Auth required for payment verification' });
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'shuttershare_secret_key');
+
+        const payment = new Payment({
+            userId: decoded.id,
+            razorpay_order_id: razorpay_order_id || 'unknown',
+            razorpay_payment_id: razorpay_payment_id || 'failed_no_id',
+            amount: amount || 0,
+            status: 'failed'
+        });
+        await payment.save();
+
+        res.json({ success: true, message: "Failed payment recorded", paymentId: payment._id });
+    } catch (error) {
+        console.error('Failed Payment Logging Error:', error);
         res.status(500).json({ error: error.message });
     }
 });

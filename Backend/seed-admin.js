@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
-const mongoURI = 'mongodb://localhost:27017/shuttershare'; // Adjust if different
+const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://admin:Shutter2026@admin.fzybtfh.mongodb.net/shuttershare';
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },

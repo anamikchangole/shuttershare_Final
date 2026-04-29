@@ -54,7 +54,8 @@
             background: var(--bg-deep);
             background-image: radial-gradient(circle at 20% 20%, rgba(230, 126, 34, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
-            padding: 80px 20px; /* Increased padding for better vertical clearance */
+            padding: 80px 20px;
+            /* Increased padding for better vertical clearance */
             overflow-y: auto;
         }
 
@@ -63,7 +64,8 @@
             padding: 40px;
             border-radius: 32px;
             width: 100%;
-            max-width: 420px; /* Base width for login */
+            max-width: 420px;
+            /* Base width for login */
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-subtle);
             text-align: center;
@@ -73,7 +75,8 @@
         }
 
         .logo-large {
-            font-size: 40px; /* Reduced slightly from 46px to fit container */
+            font-size: 40px;
+            /* Reduced slightly from 46px to fit container */
             font-weight: 900;
             letter-spacing: -1.5px;
             background: var(--gradient-gold);
@@ -908,16 +911,20 @@
             <div class="tab-buttons">
                 <button class="tab-btn active" onclick="switchTab('login')">Login</button>
                 <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
-                <button class="tab-btn" onclick="switchTab('adminLogin')"><i class="fas fa-shield-alt"></i> Admin</button>
+                <button class="tab-btn" onclick="switchTab('adminLogin')"><i class="fas fa-shield-alt"></i>
+                    Admin</button>
             </div>
             <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event, 'loginEmail', 'loginPassword')">
-                <div class="form-group"><label>Email or Username</label><input type="text" id="loginEmail" required></div>
+                <div class="form-group"><label>Email or Username</label><input type="text" id="loginEmail" required>
+                </div>
                 <div class="form-group"><label>Password</label><input type="password" id="loginPassword" required></div>
                 <button type="submit" class="btn-submit">Login →</button>
             </form>
-            <form id="adminLoginForm" class="auth-form" onsubmit="handleLogin(event, 'adminLoginEmail', 'adminLoginPassword')">
+            <form id="adminLoginForm" class="auth-form"
+                onsubmit="handleLogin(event, 'adminLoginEmail', 'adminLoginPassword')">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="width: 60px; height: 60px; background: rgba(230, 126, 34, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px; color: var(--accent-primary);">
+                    <div
+                        style="width: 60px; height: 60px; background: rgba(230, 126, 34, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px; color: var(--accent-primary);">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <h3 style="font-size: 20px; font-weight: 700;">Admin Access</h3>
@@ -926,28 +933,33 @@
                 <div class="form-group">
                     <label>Admin ID / Email</label>
                     <div style="position: relative;">
-                        <i class="fas fa-envelope" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
-                        <input type="text" id="adminLoginEmail" placeholder="admin" style="padding-left: 40px;" required>
+                        <i class="fas fa-envelope"
+                            style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
+                        <input type="text" id="adminLoginEmail" placeholder="admin" style="padding-left: 40px;"
+                            required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div style="position: relative;">
-                        <i class="fas fa-lock" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
-                        <input type="password" id="adminLoginPassword" placeholder="••••••••" style="padding-left: 40px;" required>
+                        <i class="fas fa-lock"
+                            style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
+                        <input type="password" id="adminLoginPassword" placeholder="••••••••"
+                            style="padding-left: 40px;" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">Access Dashboard →</button>
+                <button type="submit" class="btn-submit"
+                    style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">Access
+                    Dashboard →</button>
             </form>
-            <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+            <form id="registerForm" class="auth-form">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
                     <div class="form-group" style="margin: 0;">
                         <label>Full Name</label>
                         <div style="position: relative;">
                             <i class="fas fa-user"
                                 style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
-                            <input type="text" id="regName" placeholder="Full Name" style="padding-left: 40px;"
-                                required>
+                            <input type="text" id="regName" placeholder="Full Name" style="padding-left: 40px;">
                         </div>
                     </div>
                     <div class="form-group" style="margin: 0;">
@@ -965,8 +977,7 @@
                     <div style="position: relative;">
                         <i class="fas fa-envelope"
                             style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
-                        <input type="email" id="regEmail" placeholder="email@example.com" style="padding-left: 40px;"
-                            required>
+                        <input type="email" id="regEmail" placeholder="email@example.com" style="padding-left: 40px;">
                     </div>
                 </div>
 
@@ -976,8 +987,7 @@
                         <div style="position: relative;">
                             <i class="fas fa-lock"
                                 style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
-                            <input type="password" id="regPassword" placeholder="••••••••" style="padding-left: 40px;"
-                                required>
+                            <input type="password" id="regPassword" placeholder="••••••••" style="padding-left: 40px;">
                         </div>
                     </div>
                     <div class="form-group">
@@ -986,7 +996,7 @@
                             <i class="fas fa-shield-alt"
                                 style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px;"></i>
                             <input type="password" id="regConfirmPassword" placeholder="••••••••"
-                                style="padding-left: 40px;" required>
+                                style="padding-left: 40px;">
                         </div>
                     </div>
                 </div>
@@ -1028,7 +1038,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit" style="margin-top: 10px;">Create Account
+                <button type="button" class="btn-submit" style="margin-top: 10px;"
+                    onclick="handleRegister(event)">Create Account
                     →</button>
             </form>
         </div>
@@ -1324,25 +1335,36 @@
                 <h2 style="margin-bottom: 24px;">Your Orders</h2>
                 <div id="allOrders" style="background: var(--bg-surface); border-radius: 20px;"></div>
             </div>
+            <div id="rentalsPage" class="page">
+                <h2 style="margin-bottom: 24px;">Incoming Rentals</h2>
+                <div id="incomingRentals" style="background: var(--bg-surface); border-radius: 20px;"></div>
+            </div>
 
             <!-- Admin Dashboard Page -->
             <div id="adminPage" class="page">
                 <div style="max-width: 1000px; margin: 0 auto;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                         <div>
-                            <h2 style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px;">Admin Control Panel</h2>
+                            <h2 style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px;">Admin Control Panel
+                            </h2>
                             <p style="color: var(--text-gray);">Verify users and manage the marketplace safety</p>
                         </div>
-                        <div style="background: rgba(230, 126, 34, 0.1); color: var(--accent-primary); padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 700;">
+                        <div
+                            style="background: rgba(230, 126, 34, 0.1); color: var(--accent-primary); padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 700;">
                             <i class="fas fa-shield-alt"></i> MASTER ADMIN
                         </div>
                     </div>
-                    <div style="background: var(--bg-surface); border-radius: 20px; border: 1px solid var(--border-subtle); padding: 30px;">
-                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-user-clock" style="color: var(--accent-primary);"></i> Pending Verifications
+                    <div
+                        style="background: var(--bg-surface); border-radius: 20px; border: 1px solid var(--border-subtle); padding: 30px;">
+                        <h3
+                            style="font-size: 20px; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-user-clock" style="color: var(--accent-primary);"></i> Pending
+                            Verifications
                         </h3>
                         <div id="pendingUsersList" style="display: flex; flex-direction: column; gap: 20px;">
-                            <p style="color: var(--text-gray); text-align: center; padding: 40px;">Checking for pending users...</p>
+                            <p style="color: var(--text-gray); text-align: center; padding: 40px;">Checking for pending
+                                users...</p>
                         </div>
                     </div>
                 </div>
@@ -1438,7 +1460,7 @@
                                     <i class="fas fa-microphone"></i>
                                     <span>Audio</span>
                                 </div>
-                                <div class="role-card" id="catAccessory" onclick="setEqCategory('accessories')">
+                                <div class="role-card" id="catAccessory" onclick="setEqCategory('accessory')">
                                     <i class="fas fa-plug"></i>
                                     <span>Gear</span>
                                 </div>
@@ -1789,8 +1811,21 @@
 
         const API_URL = 'http://localhost:5001/api';
         let authToken = localStorage.getItem('token');
-        let currentUser = JSON.parse(localStorage.getItem('user'));
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let currentUser = null;
+        try {
+            const userStr = localStorage.getItem('user');
+            if (userStr && userStr !== 'undefined') {
+                currentUser = JSON.parse(userStr);
+            }
+        } catch (e) { console.warn('User parse error', e); }
+
+        let cart = [];
+        try {
+            const cartStr = localStorage.getItem('cart');
+            if (cartStr && cartStr !== 'undefined') {
+                cart = JSON.parse(cartStr);
+            }
+        } catch (e) { console.warn('Cart parse error', e); }
         let selectedProduct = null;
         let allBookings = [];
         let myOrders = [];
@@ -1904,8 +1939,18 @@
 
         async function handleRegister(e) {
             e.preventDefault();
+            const btn = e.currentTarget || e.target;
+            const originalText = btn.innerHTML;
+
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (!name || !email || !password) {
+                showToast('Please fill out all required fields (Name, Email, Password)', 'error');
+                return;
+            }
 
             if (password !== confirmPassword) {
                 showToast('Passwords do not match!', 'error');
@@ -1918,20 +1963,48 @@
                 return;
             }
 
-            const result = await apiCall('/auth/register', 'POST', {
-                name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value,
-                phone: document.getElementById('regPhone').value,
-                password: document.getElementById('regPassword').value,
-                role: document.getElementById('regRole').value,
-                aadhaarImage: aadhaar
-            });
-            if (result.success) {
-                showToast('Account created! Please login.');
-                switchTab('login');
-                document.getElementById('loginEmail').value = document.getElementById('regEmail').value;
-            } else {
-                showToast(result.error || 'Registration failed', 'error');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+
+            try {
+                const result = await apiCall('/auth/register', 'POST', {
+                    name, email, phone: document.getElementById('regPhone').value,
+                    password, role: document.getElementById('regRole').value,
+                    aadhaarImage: aadhaar
+                });
+
+                if (result.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Account Created!';
+                    btn.style.background = 'var(--success)';
+                    showToast('Account created securely! Redirecting to login...');
+
+                    setTimeout(() => {
+                        switchTab('login');
+                        document.getElementById('loginEmail').value = email;
+
+                        // Reset form state for future uses
+                        document.getElementById('registerForm').reset();
+                        document.getElementById('regAadhaarBase64').value = '';
+                        document.getElementById('aadhaarFileName').textContent = 'Upload Aadhaar Front Page Image';
+
+                        // Reset button
+                        btn.innerHTML = originalText;
+                        btn.style.opacity = '1';
+                        btn.style.pointerEvents = 'auto';
+                        btn.style.background = '';
+                    }, 1500);
+                } else {
+                    btn.innerHTML = originalText;
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                    showToast(result.error || 'Registration failed', 'error');
+                }
+            } catch (err) {
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                showToast('Connection error. Please try again later.', 'error');
             }
         }
 
@@ -1947,7 +2020,7 @@
             document.querySelectorAll('#addEquipmentPage .role-card').forEach(c => c.classList.remove('active'));
             const map = {
                 'camera': 'catCamera', 'lens': 'catLens', 'lighting': 'catLighting',
-                'audio': 'catAudio', 'accessories': 'catAccessory'
+                'audio': 'catAudio', 'accessory': 'catAccessory'
             };
             if (map[cat]) document.getElementById(map[cat]).classList.add('active');
         }
@@ -2038,34 +2111,14 @@
             renderCart();
         }
 
-        function updateAnalytics() {
-            if (!allBookings) return;
-
-            let earned = 0;
-            let spent = 0;
-            let count = 0;
-            const currentUserId = currentUser.id || currentUser._id;
-
-            allBookings.forEach(booking => {
-                const total = booking.totalPrice || 0;
-                // As Owner
-                if (String(booking.ownerId._id || booking.ownerId) === String(currentUserId)) {
-                    if (booking.status !== 'cancelled') {
-                        earned += total;
-                        count++;
-                    }
-                }
-                // As Renter
-                if (String(booking.renterId._id || booking.renterId) === String(currentUserId)) {
-                    if (booking.status !== 'cancelled') {
-                        spent += total;
-                    }
-                }
-            });
-
-            document.getElementById('statEarned').textContent = `₹${earned.toLocaleString()}`;
-            document.getElementById('statSpent').textContent = `₹${spent.toLocaleString()}`;
-            document.getElementById('statBookings').textContent = count;
+        async function updateAnalytics() {
+            if (!currentUser) return;
+            const res = await apiCall('/auth/analytics');
+            if (res.success) {
+                document.getElementById('statEarned').textContent = `₹${(res.earned || 0).toLocaleString()}`;
+                document.getElementById('statSpent').textContent = `₹${(res.spent || 0).toLocaleString()}`;
+                document.getElementById('statBookings').textContent = res.count || 0;
+            }
         }
 
         async function loadPendingUsers() {
@@ -2081,7 +2134,7 @@
                     <div style="background: var(--bg-deep); border-radius: 16px; padding: 25px; border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: flex-start;">
                         <div style="display: flex; gap: 20px;">
                             <div style="width: 200px; height: 130px; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle);">
-                                <img src="${user.aadhaarImage}" style="width: 100%; height: 100%; object-fit: contain; cursor: pointer;" onclick="window.open(this.src)">
+                                <img src="${API_URL}/admin/users/${user._id}/aadhaar?token=${authToken}" style="width: 100%; height: 100%; object-fit: contain; cursor: pointer;" onclick="window.open(this.src)">
                             </div>
                             <div>
                                 <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 5px;">${user.name}</h4>
@@ -2093,21 +2146,70 @@
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="btn-submit" onclick="verifyUser('${user._id}')" style="background: var(--success); width: auto; padding: 10px 20px;">Approve User</button>
-                            <button style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 8px; padding: 8px; font-size: 13px; cursor: pointer;" onclick="showToast('Rejection logic coming soon')">Reject</button>
+                            <button class="btn-submit" onclick="verifyUser('${user._id}', this)" style="background: var(--success); width: auto; padding: 10px 20px; transition: all 0.3s;">Approve User</button>
+                            <button style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 8px; padding: 8px; font-size: 13px; cursor: pointer; transition: all 0.3s;" onclick="rejectUser('${user._id}', this)">Reject</button>
                         </div>
                     </div>
                 `).join('');
             }
         }
 
-        async function verifyUser(userId) {
-            const res = await apiCall('/admin/users/verify/' + userId, 'POST');
-            if (res.success) {
-                showToast('User verified successfully!');
-                loadPendingUsers();
-            } else {
-                showToast(res.error || 'Verification failed', 'error');
+        async function verifyUser(userId, btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Approving...';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+
+            try {
+                const res = await apiCall('/admin/users/verify/' + userId, 'POST');
+                if (res.success) {
+                    showToast('User verified successfully!');
+                    // Find the parent div and animate it out smoothly
+                    const card = btn.closest('div').parentElement;
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => loadPendingUsers(), 400);
+                } else {
+                    btn.innerHTML = originalText;
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                    showToast(res.error || 'Failed to verify user', 'error');
+                }
+            } catch (err) {
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                showToast('A network error occurred', 'error');
+            }
+        }
+
+        async function rejectUser(userId, btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Removing...';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+
+            try {
+                const res = await apiCall('/admin/users/reject/' + userId, 'DELETE');
+                if (res.success) {
+                    showToast('User rejected and removed.');
+                    const card = btn.closest('div').parentElement;
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => loadPendingUsers(), 400);
+                } else {
+                    btn.innerHTML = originalText;
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                    showToast(res.error || 'Failed to reject user', 'error');
+                }
+            } catch (err) {
+                btn.innerHTML = originalText;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                showToast('A network error occurred', 'error');
             }
         }
 
@@ -2318,6 +2420,16 @@
 
         async function checkoutCart() {
             if (cart.length === 0) return;
+            
+            if (!currentUser) {
+                showToast('Please login to place an order.', 'error');
+                return;
+            }
+            if (!currentUser.isVerified) {
+                showToast('Your account must be verified by an admin before you can place orders.', 'error');
+                return;
+            }
+
             const btn = document.querySelector('.btn-checkout');
             if (btn) {
                 btn.disabled = true;
@@ -2355,7 +2467,8 @@
                         const verifyResult = await apiCall('/payments/verify', 'POST', {
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature
+                            razorpay_signature: response.razorpay_signature,
+                            amount: totalAmount
                         });
 
                         if (verifyResult.success) {
@@ -2404,6 +2517,19 @@
                 };
 
                 const rzp = new Razorpay(options);
+                rzp.on('payment.failed', async function (response) {
+                    await apiCall('/payments/fail', 'POST', {
+                        razorpay_order_id: response.error.metadata.order_id,
+                        razorpay_payment_id: response.error.metadata.payment_id,
+                        amount: totalAmount,
+                        reason: response.error.description
+                    });
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = 'Complete Booking <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
+                    }
+                    showToast(response.error.description || 'Payment failed', 'error');
+                });
                 rzp.open();
 
             } catch (error) {
@@ -2513,14 +2639,28 @@
                 });
                 images.push({ url: base64Image, isPrimary: true });
 
+                const title = document.getElementById('eqTitle').value;
+                const category = document.getElementById('eqCategory').value;
+                const brand = document.getElementById('eqBrand').value;
+                const description = document.getElementById('eqDescription').value;
+                const dailyRate = document.getElementById('eqDailyRate').value;
+                const deposit = document.getElementById('eqDeposit').value;
+
+                if (!title || !brand || !description || !dailyRate || !deposit) {
+                    showToast('Please fill out all required fields, including the description', 'error');
+                    return;
+                }
+
+                if (!city) {
+                    showToast('Please select a city location', 'error');
+                    return;
+                }
+
                 const data = {
-                    title: document.getElementById('eqTitle').value,
-                    category: document.getElementById('eqCategory').value,
-                    brand: document.getElementById('eqBrand').value,
-                    description: document.getElementById('eqDescription').value,
+                    title, category, brand, description,
                     pricing: {
-                        daily: Number(document.getElementById('eqDailyRate').value),
-                        securityDeposit: Number(document.getElementById('eqDeposit').value)
+                        daily: Number(dailyRate),
+                        securityDeposit: Number(deposit)
                     },
                     location: { city: city },
                     images: images
@@ -2656,6 +2796,14 @@
                                 <button onclick="updateBookingStatus('${o._id}', 'confirmed')" style="flex: 1; padding: 10px; background: var(--success); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">Confirm Booking</button>
                                 <button onclick="updateBookingStatus('${o._id}', 'cancelled', 'owner')" style="flex: 1; padding: 10px; background: var(--error); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">Decline</button>
                             </div>
+                        ` : o.status === 'confirmed' ? `
+                            <div style="display: flex; gap: 10px; margin-top: 5px;">
+                                <button onclick="updateBookingStatus('${o._id}', 'ready')" style="flex: 1; padding: 10px; background: var(--accent-primary); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;"><i class="fas fa-box-open"></i> Mark Ready for Pickup / Delivery</button>
+                            </div>
+                        ` : o.status === 'ready' ? `
+                            <div style="display: flex; gap: 10px; margin-top: 5px;">
+                                <div style="flex: 1; padding: 10px; background: rgba(230,126,34,0.1); border: 1px solid var(--accent-primary); border-radius: 8px; color: var(--accent-primary); font-weight: 600; text-align: center;"><i class="fas fa-check-circle"></i> Item Ready. Awaiting Handover.</div>
+                            </div>
                         ` : ''}
                     </div>
                 `).join('');
@@ -2716,14 +2864,33 @@
                 return;
             }
 
-            // Reset for active state
+            // Reset map visibility
             mapDiv.style.display = 'block';
             overlay.style.display = 'none';
-            document.getElementById('dot2').classList.add('active');
             document.getElementById('dot2').style.borderColor = '';
-            document.getElementById('step2Text').innerHTML = `<h4 style="font-size: 15px; margin-bottom: 4px;">Preparing for Pickup</h4><p style="font-size: 12px; color: var(--text-gray);">Owner is cleaning and testing the gear</p>`;
             document.getElementById('dot3').style.display = 'block';
             document.getElementById('step3Text').style.display = 'block';
+
+            // Configure dots based on status
+            const dot2 = document.getElementById('dot2');
+            const dot3 = document.getElementById('dot3');
+            
+            if (status === 'pending') {
+                dot2.classList.remove('active');
+                dot3.classList.remove('active');
+                document.getElementById('step1Text').innerHTML = `<h4 style="font-size: 15px; margin-bottom: 4px;">Booking Placed</h4><p style="font-size: 12px; color: var(--text-gray);">Pending owner approval</p>`;
+                document.getElementById('step2Text').innerHTML = `<h4 style="font-size: 15px; margin-bottom: 4px;">Preparing for Pickup</h4><p style="font-size: 12px; color: var(--text-gray);">Owner will clean and test gear once approved</p>`;
+            } else if (status === 'confirmed') {
+                dot2.classList.add('active');
+                dot3.classList.remove('active');
+                document.getElementById('step1Text').innerHTML = `<h4 style="font-size: 15px; margin-bottom: 4px;">Booking Confirmed</h4><p style="font-size: 12px; color: var(--text-gray);">Payment verified and order accepted</p>`;
+                document.getElementById('step2Text').innerHTML = `<h4 style="font-size: 15px; margin-bottom: 4px;">Preparing for Pickup</h4><p style="font-size: 12px; color: var(--text-gray);">Owner is cleaning and testing the gear</p>`;
+            } else if (status === 'ready' || status === 'active' || status === 'completed') {
+                dot2.classList.add('active');
+                dot3.classList.add('active');
+                document.getElementById('step1Text').innerHTML = `<h4 style="font-size: 15px; margin-bottom: 4px;">Booking Confirmed</h4><p style="font-size: 12px; color: var(--text-gray);">Payment verified and order accepted</p>`;
+                document.getElementById('step2Text').innerHTML = `<h4 style="font-size: 15px; margin-bottom: 4px;">Preparing for Pickup</h4><p style="font-size: 12px; color: var(--text-gray);">Owner is cleaning and testing the gear</p>`;
+            }
 
             // Wait for modal transition then init map
             setTimeout(() => {
